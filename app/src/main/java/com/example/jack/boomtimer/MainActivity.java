@@ -4,6 +4,8 @@ import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -27,6 +29,16 @@ public class MainActivity extends AppCompatActivity {
         np_player_picker.setMaxValue(50);
         np_player_picker.setWrapSelectorWheel(false);
         /* TODO set the player count on app start to what it previously was */
+
+        /* set up the start game button */
+        final Button start_button;
+        start_button = (Button)findViewById(R.id.start_button);
+        start_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO launch the timer activity with numPlayers and numRounds
+            }
+        });
 
         /* set up the radio buttons for number of rounds */
         final RadioGroup rg_rounds;
