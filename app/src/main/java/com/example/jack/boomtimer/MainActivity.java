@@ -1,5 +1,7 @@
 package com.example.jack.boomtimer;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,10 +14,11 @@ import android.widget.RadioGroup;
 
 public class MainActivity extends AppCompatActivity {
 
-    private int numPlayers;
-    private int numRounds;
+    private int numPlayers = 6;
+    private int numRounds = 3;
 
     private static final String TAG = "BoomTimer";
+    private static final String PERSIST = "PersistanceFile";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +39,10 @@ public class MainActivity extends AppCompatActivity {
         start_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO launch the timer activity with numPlayers and numRounds
+                Intent timerStartIntent = new Intent(MainActivity.this, TimerActivity.class);
+                timerStartIntent.putExtra("numPlayers", numPlayers);
+                timerStartIntent.putExtra("numRounds", numRounds);
+                startActivity(timerStartIntent);
             }
         });
 
@@ -94,6 +100,16 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        SharedPreferences persist = getSharedPreferences(PERSIST, 0);
+        SharedPreferences.Editor editor = persist.edit();
+        editor.putInt("players", numPlayers);
+        editor.putInt("rounds", numRounds);
+        editor.commit();
     }
 
 
