@@ -35,24 +35,5 @@ public class TimerActivity extends AppCompatActivity {
         seconds = (numRounds - (currentRound - 1)) * 60;
     }
 
-    private int get_hostages() {
-        int groupCode = -1;
-        if(numPlayers <= 10) {
-            groupCode = 0;
-        }
-        else if(numPlayers <= 13) {
-            groupCode = 1;
-        }
-        else if(numPlayers <= 17) {
-            groupCode = 2;
-        }
-        else if(numPlayers <= 21) {
-            groupCode = 3;
-        }
-        else {
-            groupCode = 4;
-        }
 
-        return hostages[groupCode][numRounds - (currentRound - 1)];
-    }
 }
