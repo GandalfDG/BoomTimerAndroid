@@ -4,4 +4,6 @@
     <string name="player_label">Players:</string>
     <string name="rounds_3">3 Rounds</string>
     <string name="rounds_5">5 Rounds</string>
+    <string name="round_label">Round:</string>
+    <string name="hostage_label">Hostages:</string>
 </resources>

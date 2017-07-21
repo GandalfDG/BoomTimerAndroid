@@ -29,6 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
             android:text="@string/player_label"
             android:textColor="@android:color/background_light" />
 
@@ -38,7 +39,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="false"
             android:layout_alignParentRight="false"
-            android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/player_label"
             android:layout_weight="1" />
 
