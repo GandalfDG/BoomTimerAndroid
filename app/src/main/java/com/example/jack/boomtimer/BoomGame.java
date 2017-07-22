@@ -58,6 +58,6 @@ public class BoomGame {
             groupCode = 4;
         }
 
-        return hostages[groupCode][numRounds - (currentRound - 1)];
+        return hostages[groupCode][numRounds - (currentRound - 1) - 1];
     }
 }
