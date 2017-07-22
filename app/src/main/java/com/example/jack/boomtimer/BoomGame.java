@@ -16,6 +16,7 @@ public class BoomGame {
                                              {1, 2, 3, 4, 5}};
 
     public BoomGame(int numPlayers, int numRounds) {
+        this.currentRound = 1;
         this.numPlayers = numPlayers;
         this.numRounds = numRounds;
     }
@@ -30,7 +31,16 @@ public class BoomGame {
         return currentRound;
     }
 
-    private int get_hostages() {
+    public int getNumPlayers() {
+        return numPlayers;
+    }
+
+    public int getNumRounds() {
+        return numRounds;
+    }
+
+    //TODO fix this
+    public int getHostages() {
         int groupCode = -1;
         if(numPlayers <= 10) {
             groupCode = 0;

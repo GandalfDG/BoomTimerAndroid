@@ -21,13 +21,12 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/Time"
+            android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="40dp"
-            android:text="4:59"
             android:textAppearance="@style/TextAppearance.AppCompat.Display4"
             android:textColor="@color/colorAccent" />
 
@@ -44,10 +43,11 @@
             android:id="@+id/round_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/round_label"
-            android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="10dp"
+            android:text="@string/round_label" />
 
         <TextView
             android:id="@+id/current_round"
