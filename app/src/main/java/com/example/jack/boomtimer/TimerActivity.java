@@ -17,6 +17,7 @@ public class TimerActivity extends Activity {
     TextView tv_round;
     TextView tv_hostage;
     Timer countdown;
+    boolean paused;
     private Handler timer_handler;
 
     @Override
@@ -26,6 +27,7 @@ public class TimerActivity extends Activity {
         //TODO reload state in case app was closed and reopened
         int numPlayers;
         int numRounds;
+
         numPlayers = getIntent().getIntExtra("numPlayers", 6);
         numRounds = getIntent().getIntExtra("numRounds", 3);
 
@@ -47,8 +49,7 @@ public class TimerActivity extends Activity {
         countdown.schedule(new TimerTask() {
             @Override
             public void run() {
-                //TODO allow pausing
-                if(seconds > 0) {
+                if(seconds > 0 && !paused) {
                     seconds--;
                     timer_handler.post(new Runnable() {
                         @Override
@@ -64,6 +65,19 @@ public class TimerActivity extends Activity {
 
     private void setTimer() {
         seconds = (game.getNumRounds() - (game.getCurrentRound() - 1)) * 60;
+        paused = false;
+    }
+
+    private void pauseTimer() {
+        paused = true;
+    }
+
+    private void resumeTimer() {
+        paused = false;
+    }
+
+    private void toggleTimer() {
+        paused = !paused;
     }
 
     private void updateTime() {
