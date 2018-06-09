@@ -62,6 +62,9 @@ public class TimerActivity extends Activity {
                     setTimer();
                     tv_round.setText(Integer.toString(game.getCurrentRound()));
                     tv_hostage.setText(Integer.toString(game.getHostages()));
+                    pause_button.setState(TimerButton.timerButtonState.PAUSE);
+                    updateTime();
+                    paused = false;
                 }
             }
         });
@@ -98,7 +101,7 @@ public class TimerActivity extends Activity {
     }
 
     private void setTimer() {
-        seconds = (game.getNumRounds() - (game.getCurrentRound() - 1)) * 60;
+        seconds = (game.getNumRounds() - (game.getCurrentRound() - 1)) * 6;
     }
 
     private void pauseTimer() {
