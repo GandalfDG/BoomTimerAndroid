@@ -8,4 +8,5 @@
     <string name="hostage_label">Hostages:</string>
     <string name="pause_timer">Pause</string>
     <string name="resume_timer">Resume</string>
+    <string name="next_round">Next Round</string>
 </resources>

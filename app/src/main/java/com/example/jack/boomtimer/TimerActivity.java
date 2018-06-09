@@ -19,7 +19,7 @@ public class TimerActivity extends Activity {
     TextView tv_time;
     TextView tv_round;
     TextView tv_hostage;
-    Button pause_button;
+    TimerButton pause_button;
     Resources res;
     Timer countdown;
     boolean paused;
@@ -42,7 +42,7 @@ public class TimerActivity extends Activity {
         tv_round = (TextView)findViewById(R.id.current_round);
         tv_hostage = (TextView)findViewById(R.id.current_hostages);
 
-        pause_button = (Button)findViewById(R.id.pause_button);
+        pause_button = (TimerButton)findViewById(R.id.pause_button);
 
         res = getResources();
 
@@ -54,12 +54,20 @@ public class TimerActivity extends Activity {
         pause_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                toggleTimer();
-                pause_button.setText(paused ? res.getText(R.string.resume_timer) : res.getText(R.string.pause_timer));
+                if(pause_button.getState() != TimerButton.timerButtonState.NEXT_ROUND) {
+                    toggleTimer();
+                    pause_button.switchState();
+                }
+                else {
+                    setTimer();
+                    tv_round.setText(Integer.toString(game.getCurrentRound()));
+                    tv_hostage.setText(Integer.toString(game.getHostages()));
+                }
             }
         });
 
         setTimer();
+        paused = false;
         updateTime();
 
         countdown = new Timer();
@@ -76,13 +84,21 @@ public class TimerActivity extends Activity {
                     });
                 }
                 //TODO launch activity for between rounds
+                else if (seconds <= 0) {
+                    timer_handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            prepareNextRound();
+                        }
+                    });
+                }
+
             }
         }, 0, 1000);
     }
 
     private void setTimer() {
         seconds = (game.getNumRounds() - (game.getCurrentRound() - 1)) * 60;
-        paused = false;
     }
 
     private void pauseTimer() {
@@ -95,6 +111,12 @@ public class TimerActivity extends Activity {
 
     private void toggleTimer() {
         paused = !paused;
+    }
+
+    private void prepareNextRound() {
+        pause_button.setState(TimerButton.timerButtonState.NEXT_ROUND);
+        paused = true;
+        game.nextRound();
     }
 
     private void updateTime() {

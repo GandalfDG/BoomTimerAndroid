@@ -39,6 +39,10 @@ public class BoomGame {
         return numRounds;
     }
 
+    public void nextRound() {
+        currentRound++;
+    }
+
     //TODO fix this
     public int getHostages() {
         int groupCode = -1;
