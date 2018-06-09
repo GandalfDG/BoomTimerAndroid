@@ -1,14 +1,14 @@
 package com.example.jack.boomtimer;
 
+import android.app.Activity;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class TimerActivity extends AppCompatActivity {
+public class TimerActivity extends Activity {
 
     private int seconds;
     private String time_str;

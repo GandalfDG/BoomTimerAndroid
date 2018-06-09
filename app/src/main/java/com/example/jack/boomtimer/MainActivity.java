@@ -1,9 +1,9 @@
 package com.example.jack.boomtimer;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.IdRes;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,7 +12,7 @@ import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
     private int numPlayers = 6;
     private int numRounds = 3;
