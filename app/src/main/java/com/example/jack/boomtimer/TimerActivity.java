@@ -1,8 +1,11 @@
 package com.example.jack.boomtimer;
 
 import android.app.Activity;
+import android.content.res.Resources;
 import android.os.Handler;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.Timer;
@@ -16,6 +19,8 @@ public class TimerActivity extends Activity {
     TextView tv_time;
     TextView tv_round;
     TextView tv_hostage;
+    Button pause_button;
+    Resources res;
     Timer countdown;
     boolean paused;
     private Handler timer_handler;
@@ -37,10 +42,22 @@ public class TimerActivity extends Activity {
         tv_round = (TextView)findViewById(R.id.current_round);
         tv_hostage = (TextView)findViewById(R.id.current_hostages);
 
+        pause_button = (Button)findViewById(R.id.pause_button);
+
+        res = getResources();
+
         timer_handler = new Handler();
 
         tv_round.setText(Integer.toString(game.getCurrentRound()));
         tv_hostage.setText(Integer.toString(game.getHostages()));
+
+        pause_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleTimer();
+                pause_button.setText(paused ? res.getText(R.string.resume_timer) : res.getText(R.string.pause_timer));
+            }
+        });
 
         setTimer();
         updateTime();
