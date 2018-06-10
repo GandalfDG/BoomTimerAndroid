@@ -20,6 +20,7 @@ public class TimerActivity extends Activity {
     private TimerButton pause_button;
     private Timer countdown;
     private boolean paused;
+    private boolean game_over;
     private Handler timer_event_handler;
 
     @Override
@@ -34,7 +35,7 @@ public class TimerActivity extends Activity {
         numRounds = getIntent().getIntExtra("numRounds", 3);
 
         game = new BoomGame(numPlayers, numRounds);
-
+        game_over = false;
         tv_time = (TextView)findViewById(R.id.time);
         tv_round = (TextView)findViewById(R.id.current_round);
         tv_hostage = (TextView)findViewById(R.id.current_hostages);
@@ -50,12 +51,11 @@ public class TimerActivity extends Activity {
 
     private void startRound() {
         setTimer();
-        updateTime();
         tv_round.setText(Integer.toString(game.getCurrentRound()));
         tv_hostage.setText(Integer.toString(game.getHostages()));
         pause_button.setState(TimerButton.timerButtonState.PAUSE);
         countdown = new Timer();
-        countdown.schedule(timer_task, 0, 1000);
+        countdown.schedule(createTimerTask(), 0, 1000);
         paused = false;
     }
     
@@ -63,7 +63,15 @@ public class TimerActivity extends Activity {
         pause_button.setState(TimerButton.timerButtonState.NEXT_ROUND);
         countdown.cancel();
         paused = true;
-        game.nextRound();
+        try {
+            game.nextRound();
+            setTimer();
+            updateTime();
+        } catch (Exception e) {
+            game_over = true;
+            pause_button.setState(TimerButton.timerButtonState.GAME_OVER);
+           // gameOver();
+        }
     }
 
     private void updateTime() {
@@ -88,43 +96,42 @@ public class TimerActivity extends Activity {
             }
             else {
                 pause_button.setState(TimerButton.timerButtonState.PAUSE);
-                setTimer();
-                tv_round.setText(Integer.toString(game.getCurrentRound()));
-                tv_hostage.setText(Integer.toString(game.getHostages()));
-                updateTime();
-                paused = false;
+                if(!game_over) {
+                    startRound();
+                }
             }
         }
     };
     
-    private TimerTask timer_task = new TimerTask() {
-        @Override
-        public void run() {
-            if(seconds > 0 && !paused) {
-                seconds--;
-                timer_event_handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        updateTime();
-                    }
-                });
-            }
-            //TODO launch activity for between rounds
-            else if (seconds <= 0) {
-                timer_event_handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        prepareNextRound();
-                        startRound();
-                    }
-                });
-            }
+    private TimerTask createTimerTask() {
+        return new TimerTask() {
+            @Override
+            public void run() {
+                if (seconds > 0 && !paused) {
+                    seconds--;
+                    timer_event_handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            updateTime();
+                        }
+                    });
+                }
+                //TODO launch activity for between rounds
+                else if (seconds <= 0) {
+                    timer_event_handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            prepareNextRound();
+                        }
+                    });
+                }
 
-        }
-    };
+            }
+        };
+    }
 
     private void setTimer() {
-        seconds = (game.getNumRounds() - (game.getCurrentRound() - 1)) * 6;
+        seconds = (game.getNumRounds() - (game.getCurrentRound() - 1)) * 60;
     }
 
     private void pauseTimer() {

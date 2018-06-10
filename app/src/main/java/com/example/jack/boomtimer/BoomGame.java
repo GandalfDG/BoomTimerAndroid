@@ -39,8 +39,11 @@ public class BoomGame {
         return numRounds;
     }
 
-    public void nextRound() {
-        currentRound++;
+    public void nextRound() throws Exception {
+        if(currentRound < numRounds) {
+            currentRound++;
+        }
+        else throw new Exception("Game Over");
     }
 
     //TODO fix this

@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import android.widget.Button;
 
 public class TimerButton extends Button {
-    public enum timerButtonState {PAUSE, RESUME, NEXT_ROUND};
+    public enum timerButtonState {PAUSE, RESUME, NEXT_ROUND, GAME_OVER};
     private timerButtonState state;
 
     public TimerButton(Context context) {
@@ -38,6 +38,9 @@ public class TimerButton extends Button {
                 break;
             case NEXT_ROUND:
                 this.setText(R.string.next_round);
+                break;
+            case GAME_OVER:
+                this.setText("Game Over!");
                 break;
         }
     }
