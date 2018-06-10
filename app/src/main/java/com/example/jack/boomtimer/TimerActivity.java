@@ -1,11 +1,9 @@
 package com.example.jack.boomtimer;
 
 import android.app.Activity;
-import android.content.res.Resources;
 import android.os.Handler;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.Timer;
@@ -16,14 +14,13 @@ public class TimerActivity extends Activity {
     private int seconds;
     private String time_str;
     private BoomGame game;
-    TextView tv_time;
-    TextView tv_round;
-    TextView tv_hostage;
-    TimerButton pause_button;
-    Resources res;
-    Timer countdown;
-    boolean paused;
-    private Handler timer_handler;
+    private TextView tv_time;
+    private TextView tv_round;
+    private TextView tv_hostage;
+    private TimerButton pause_button;
+    private Timer countdown;
+    private boolean paused;
+    private Handler timer_event_handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,80 +41,27 @@ public class TimerActivity extends Activity {
 
         pause_button = (TimerButton)findViewById(R.id.pause_button);
 
-        res = getResources();
+        timer_event_handler = new Handler();
 
-        timer_handler = new Handler();
+        pause_button.setOnClickListener(pauseButtonListener);
+        
+        startRound();
+    }
 
+    private void startRound() {
+        setTimer();
+        updateTime();
         tv_round.setText(Integer.toString(game.getCurrentRound()));
         tv_hostage.setText(Integer.toString(game.getHostages()));
-
-        pause_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(pause_button.getState() != TimerButton.timerButtonState.NEXT_ROUND) {
-                    toggleTimer();
-                    pause_button.switchState();
-                }
-                else {
-                    setTimer();
-                    tv_round.setText(Integer.toString(game.getCurrentRound()));
-                    tv_hostage.setText(Integer.toString(game.getHostages()));
-                    pause_button.setState(TimerButton.timerButtonState.PAUSE);
-                    updateTime();
-                    paused = false;
-                }
-            }
-        });
-
-        setTimer();
-        paused = false;
-        updateTime();
-
+        pause_button.setState(TimerButton.timerButtonState.PAUSE);
         countdown = new Timer();
-        countdown.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if(seconds > 0 && !paused) {
-                    seconds--;
-                    timer_handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            updateTime();
-                        }
-                    });
-                }
-                //TODO launch activity for between rounds
-                else if (seconds <= 0) {
-                    timer_handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            prepareNextRound();
-                        }
-                    });
-                }
-
-            }
-        }, 0, 1000);
-    }
-
-    private void setTimer() {
-        seconds = (game.getNumRounds() - (game.getCurrentRound() - 1)) * 6;
-    }
-
-    private void pauseTimer() {
-        paused = true;
-    }
-
-    private void resumeTimer() {
+        countdown.schedule(timer_task, 0, 1000);
         paused = false;
     }
-
-    private void toggleTimer() {
-        paused = !paused;
-    }
-
+    
     private void prepareNextRound() {
         pause_button.setState(TimerButton.timerButtonState.NEXT_ROUND);
+        countdown.cancel();
         paused = true;
         game.nextRound();
     }
@@ -133,5 +77,65 @@ public class TimerActivity extends Activity {
             time_str = min + ":0" + sec;
         }
         tv_time.setText(time_str);
+    }
+    
+    private View.OnClickListener pauseButtonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if(pause_button.getState() != TimerButton.timerButtonState.NEXT_ROUND) {
+                toggleTimer();
+                pause_button.switchState();
+            }
+            else {
+                pause_button.setState(TimerButton.timerButtonState.PAUSE);
+                setTimer();
+                tv_round.setText(Integer.toString(game.getCurrentRound()));
+                tv_hostage.setText(Integer.toString(game.getHostages()));
+                updateTime();
+                paused = false;
+            }
+        }
+    };
+    
+    private TimerTask timer_task = new TimerTask() {
+        @Override
+        public void run() {
+            if(seconds > 0 && !paused) {
+                seconds--;
+                timer_event_handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateTime();
+                    }
+                });
+            }
+            //TODO launch activity for between rounds
+            else if (seconds <= 0) {
+                timer_event_handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        prepareNextRound();
+                        startRound();
+                    }
+                });
+            }
+
+        }
+    };
+
+    private void setTimer() {
+        seconds = (game.getNumRounds() - (game.getCurrentRound() - 1)) * 6;
+    }
+
+    private void pauseTimer() {
+        paused = true;
+    }
+
+    private void resumeTimer() {
+        paused = false;
+    }
+
+    private void toggleTimer() {
+        paused = !paused;
     }
 }
